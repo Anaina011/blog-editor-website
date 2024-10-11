@@ -1,3 +1,7 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 :root {
     --blogger-dark-grey: #ccd0d4;
     --blogger-light-grey: #f6f7f7;
@@ -35,6 +39,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: start;
+}
+
+.bed_menubar_col2 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .bed_menubar_col2 {
@@ -98,6 +108,14 @@ body {
     margin-top: 1%;
 }
 
+.bed_editor_area textarea {
+    width: 100%;
+    padding: 0.7%;
+    font-weight: 600;
+    margin-bottom: 1%;
+    margin-top: 1%;
+}
+
 .ql-editor {
     background-color: #ffff;
     min-height: 50vh !important;
@@ -114,6 +132,7 @@ body {
 .image-preview {
     width: 100%;
     height: auto;
+    
 }
 
 .image-preview p {
@@ -169,6 +188,31 @@ body {
 }
 
 .categories_card p {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+}
+
+.robots_card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+.robots_card p {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+}
+
+
+.geoTag_card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+.geoTag_card p {
     font-weight: bold;
     border-bottom: 1px solid #000;
 }
@@ -314,6 +358,15 @@ body {
     border-radius: 0.3rem !important;
     margin: 2% !important;
 
+}
+
+
+
+
+.advanced_editor_options{
+    width: 100%;
+    height: max-content;
+    display: none;
 }
 
 * {

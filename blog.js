@@ -8,23 +8,23 @@ document.getElementById("displayUserName").innerText = username;
 
 const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
-    ['link', 'image', 'video', 'formula'],
+    // ['blockquote', 'code-block'],
+    ['link', 'image', 'video'],
 
     [{ 'header': 1 }, { 'header': 2 }],               // custom button values
     [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
     [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
     [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    [{ 'direction': 'rtl' }],                         // text direction
+    // [{ 'direction': 'rtl' }],                         // text direction
 
-    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown000000000000000000
+    // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
     [{ 'font': [] }],
     [{ 'align': [] }],
 
-    ['clean']                                         // remove formatting button
+    // ['clean']                                         // remove formatting button
 ];
 const quill = new Quill('#bed_content_editor', {
     modules: {
@@ -32,6 +32,9 @@ const quill = new Quill('#bed_content_editor', {
     },
     theme: 'snow',
 });
+
+
+
 
 // ************************************************************************************
 // script to add hash tags
@@ -48,7 +51,7 @@ document.getElementById('add-tag-button').addEventListener('click', () => {
 
         const tagName = document.createElement('span');
         tagName.textContent = `#${tag}`;
-        
+
         const removeButton = document.createElement('button');
         removeButton.innerHTML = '&times;';
         removeButton.addEventListener('click', () => {
@@ -153,4 +156,98 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Error loading JSON data:', error);
         });
+});
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Load categories from categories.json and populate the dropdown
+    fetch('categories.json')
+        .then(response => response.json())
+        .then(data => {
+            const categoryDropdown = document.getElementById('category-dropdown');
+            categoryDropdown.innerHTML = ''; // Clear existing options
+
+
+            // Add existing categories to the dropdown
+            data.categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryDropdown.appendChild(option);
+
+                const editPostData = localStorage.getItem('editPostData');
+                if (editPostData) {
+                    const postData = JSON.parse(editPostData);
+
+                    console.log(postData.category);
+                    var postcategory = postData.category;
+                    if (category.toLowerCase() === postcategory.toLowerCase()) {
+                        option.setAttribute('selected', 'selected');
+                    }
+                }
+            });
+
+            // Add the "Add New" option at the end
+            const addNewOption = document.createElement('option');
+            addNewOption.value = 'add-new';
+            addNewOption.textContent = 'Add New Category';
+            categoryDropdown.appendChild(addNewOption);
+        })
+        .catch(error => console.error('Error loading categories:', error));
+
+    // Show the modal to add a new category when "Add New" is selected
+    document.getElementById('category-dropdown').addEventListener('change', function () {
+        if (this.value === 'add-new') {
+            document.getElementById('addCategoryModal').style.display = 'block';
+        }
+    });
+
+    // Save new category
+    document.getElementById('saveCategoryButton').addEventListener('click', function () {
+        const newCategory = document.getElementById('newCategoryInput').value.trim();
+        if (newCategory) {
+            // Add new category to categories.json
+            fetch('categories.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Check if the category already exists
+                    if (!data.categories.includes(newCategory)) {
+                        data.categories.push(newCategory);
+
+                        // Save the updated categories list to categories.json
+                        return fetch('save_categories.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+                    } else {
+                        alert('Category already exists!');
+                    }
+                })
+                .then(() => {
+                    // Add the new category to the dropdown
+                    const option = document.createElement('option');
+                    option.value = newCategory;
+                    option.textContent = newCategory;
+                    document.getElementById('category-dropdown').appendChild(option);
+                    document.getElementById('category-dropdown').value = newCategory;
+
+                    // Close the modal
+                    document.getElementById('addCategoryModal').style.display = 'none';
+                })
+                .catch(error => console.error('Error saving category:', error));
+        } else {
+            alert('Please enter a category name.');
+        }
+    });
 });
